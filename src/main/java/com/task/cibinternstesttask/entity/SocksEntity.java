@@ -1,14 +1,19 @@
 package com.task.cibinternstesttask.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 @Entity
 public class SocksEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String color;
+    @Min(0)
+    @Max(100)
     private int cottonPart;
+    @Positive
     private int quantity;
 
     public SocksEntity() {
