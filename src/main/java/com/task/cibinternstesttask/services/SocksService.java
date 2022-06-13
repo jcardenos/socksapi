@@ -7,7 +7,6 @@ import com.task.cibinternstesttask.repositories.SocksRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.geom.Arc2D;
 import java.util.Optional;
 
 @Service
@@ -16,10 +15,10 @@ public class SocksService {
     private SocksRepo socksRepo;
 
     public SocksEntity incomeSocks(SocksEntity socks) {
-        if (socks.getQuantity() <= 0 | socks.getCottonPart() < 0 | socks.getCottonPart() > 100 |
-                socks.getColor().isEmpty()) {
+        if (socks.getQuantity() <= 0 | socks.getCottonPart() < 0 | socks.getCottonPart() > 100 | socks.getColor().isEmpty()) {
             throw new SocksException(SocksErrorCode.INCORRECT_PARAMS);
         }
+
         Optional<Integer> quantity = Optional.ofNullable(socksRepo.
                 findQuantityOfSocksByColorAndCottonPartEqualsToCurrentNumber(socks.getColor(), socks.getCottonPart()));
         if (!quantity.isPresent()) {
@@ -31,8 +30,7 @@ public class SocksService {
     }
 
     public void outcomeSocks(SocksEntity socks) {
-        if (socks.getQuantity() <= 0 | socks.getCottonPart() < 0 | socks.getCottonPart() > 100 |
-                socks.getColor().isEmpty()) {
+        if (socks.getQuantity() <= 0 | socks.getCottonPart() < 0 | socks.getCottonPart() > 100 | socks.getColor().isEmpty()) {
             throw new SocksException(SocksErrorCode.INCORRECT_PARAMS);
         }
 

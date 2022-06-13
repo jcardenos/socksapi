@@ -16,13 +16,13 @@ public class SocksController {
     private SocksService socksService;
 
     @PostMapping("/income")
-    public ResponseEntity<String> incomeSocks(@Valid @RequestBody SocksEntity socks) {
+    public ResponseEntity<String> incomeSocks(@RequestBody SocksEntity socks) {
             socksService.incomeSocks(socks);
             return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/outcome")
-    public ResponseEntity<String> outcomeSocks(@Valid @RequestBody SocksEntity socks) {
+    public ResponseEntity<String> outcomeSocks(@RequestBody SocksEntity socks) {
             socksService.outcomeSocks(socks);
             return new ResponseEntity<>(HttpStatus.OK);
     }
