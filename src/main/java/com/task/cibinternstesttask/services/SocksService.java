@@ -1,5 +1,6 @@
 package com.task.cibinternstesttask.services;
 
+import com.task.cibinternstesttask.components.Validation;
 import com.task.cibinternstesttask.entity.SocksEntity;
 import com.task.cibinternstesttask.exceptions.SocksErrorCode;
 import com.task.cibinternstesttask.exceptions.SocksException;
@@ -11,13 +12,17 @@ import java.util.Optional;
 
 @Service
 public class SocksService {
-    @Autowired
     private SocksRepo socksRepo;
+    private Validation validation;
+
+    @Autowired
+    public SocksService(SocksRepo socksRepo, Validation validation) {
+        this.socksRepo = socksRepo;
+        this.validation = validation;
+    }
 
     public SocksEntity incomeSocks(SocksEntity socks) {
-        if (socks.getQuantity() <= 0 | socks.getCottonPart() < 0 | socks.getCottonPart() > 100 | socks.getColor().isEmpty()) {
-            throw new SocksException(SocksErrorCode.INCORRECT_PARAMS);
-        }
+        validation.incomeOutcomeValidator(socks);
 
         Optional<Integer> quantity = Optional.ofNullable(socksRepo.
                 findQuantityOfSocksByColorAndCottonPartEqualsToCurrentNumber(socks.getColor(), socks.getCottonPart()));
@@ -30,17 +35,12 @@ public class SocksService {
     }
 
     public void outcomeSocks(SocksEntity socks) {
-        if (socks.getQuantity() <= 0 | socks.getCottonPart() < 0 | socks.getCottonPart() > 100 | socks.getColor().isEmpty()) {
-            throw new SocksException(SocksErrorCode.INCORRECT_PARAMS);
-        }
+        validation.incomeOutcomeValidator(socks);
 
         Optional<Integer> quantity = Optional.ofNullable(socksRepo.
                 findQuantityOfSocksByColorAndCottonPartEqualsToCurrentNumber(socks.getColor(), socks.getCottonPart()));
-        if (quantity.isPresent() && quantity.get() >= socks.getQuantity()) {
-            socksRepo.outcomeSocks(socks.getColor(), socks.getCottonPart(), socks.getQuantity());
-        } else {
-            throw new SocksException(SocksErrorCode.SERVER_ERROR);
-        }
+        validation.outcomeValidator(quantity, socks.getQuantity());
+        socksRepo.outcomeSocks(socks.getColor(), socks.getCottonPart(), socks.getQuantity());
     }
 
     public int getQuantityOfSocksByColorAndCottonPartLessThanCurrentNumber(String color, int cottonPart) {
@@ -71,9 +71,8 @@ public class SocksService {
     }
 
     public int getAllSocksByOperationAndCurrentParameters(String color, int cottonPart, String operation) {
-        if (color.isEmpty() | cottonPart < 0 | cottonPart > 100) {
-            throw new SocksException(SocksErrorCode.INCORRECT_PARAMS);
-        }
+        validation.getSocksValidator(color, cottonPart);
+
         if (operation.equals("moreThan")) {
             return getQuantityOfSocksByColorAndCottonPartGreaterThanCurrentNumber(color, cottonPart);
         }
