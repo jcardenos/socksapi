@@ -5,8 +5,7 @@
 Стек технологий:
 
 * Java 11
-* Spring Boot/Data/MVC
-* JDBC
+* Spring Boot/Data JDBC/MVC
 * MySQL
 * Junit
 
